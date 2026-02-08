@@ -68,18 +68,15 @@ a{color:#00d9ff;text-decoration:none;font-size:13px}
 </div>
 
 <script>
-// Movie data (can be fetched from Telegram JSON)
-let movies=[
-{title:"Parasakthi (2026)",cat:"history",img:"https://via.placeholder.com/300x450",trailer:"https://youtu.be/dXCliyBQnWU?si=G9ysPh-MaZxRdmlc",comments:[]},
-{title:"Queen of Chess",cat:"drama",img:"https://via.placeholder.com/300x450",trailer:"#",comments:[]},
-{title:"The Wrecking Crew",cat:"action",img:"https://via.placeholder.com/300x450",trailer:"#",comments:[]}
-];
+// Movie array – will be fetched from JSON
+let movies = [];
 
+// Load movies to HTML
 function loadMovies(list){
-let box=document.getElementById("movieList");
-box.innerHTML="";
-list.forEach((m,i)=>{
-box.innerHTML+=`
+let box = document.getElementById("movieList");
+box.innerHTML = "";
+list.forEach((m, i) => {
+box.innerHTML += `
 <div class="card" data-cat="${m.cat}" id="card${i}">
 <img src="${m.img}">
 <h4>${m.title}</h4>
@@ -94,19 +91,22 @@ loadComments(i);
 });
 }
 
+// Search movies
 function searchMovies(){
-let val=document.getElementById("searchBox").value.toLowerCase();
-loadMovies(movies.filter(m=>m.title.toLowerCase().includes(val)));
+let val = document.getElementById("searchBox").value.toLowerCase();
+loadMovies(movies.filter(m => m.title.toLowerCase().includes(val)));
 }
 
+// Filter by category
 function filterCategory(cat){
 if(cat=="all"){loadMovies(movies);}
 else{loadMovies(movies.filter(m=>m.cat==cat));}
 }
 
+// Simple login demo
 function login(){
-let user=document.getElementById("user").value;
-let pass=document.getElementById("pass").value;
+let user = document.getElementById("user").value;
+let pass = document.getElementById("pass").value;
 if(user=="admin" && pass=="1234"){alert("✅ Welcome!");} 
 else{alert("❌ Wrong credentials!");}
 }
@@ -133,7 +133,22 @@ list.appendChild(li);
 });
 }
 
+// 🔹 Fetch movies from GitHub JSON
+function fetchMovies(){
+fetch("https://raw.githubusercontent.com/username/movieflix-ultra/main/movies.json")
+.then(res=>res.json())
+.then(data=>{
+movies=data.map(m=>({...m, comments:[]}));
 loadMovies(movies);
+})
+.catch(err=>console.log("Error fetching JSON:",err));
+}
+
+// Initial fetch
+fetchMovies();
+
+// Auto-refresh every 60 sec
+setInterval(fetchMovies, 60000);
 </script>
 
 </body>
