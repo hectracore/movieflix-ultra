@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MovieFlix ULTRA</title>
+<style>
+body{margin:0;background:#141414;color:#fff;font-family:Arial}
+.header{background:#000;padding:15px;font-size:24px;font-weight:bold;color:#e50914}
+.slider{width:100%;overflow:hidden;margin-bottom:15px}
+.slides{display:flex;animation:slide 12s infinite}
+.slides img{width:100%;height:250px;object-fit:cover}
+@keyframes slide{
+0%{transform:translateX(0)}
+33%{transform:translateX(0)}
+36%{transform:translateX(-100%)}
+66%{transform:translateX(-100%)}
+69%{transform:translateX(-200%)}
+100%{transform:translateX(-200%)}
+}
+.container{padding:15px}
+.search{padding:10px;width:100%;border:none;border-radius:6px;margin:10px 0}
+.buttons button{margin:5px;padding:8px;border:none;border-radius:5px;background:#e50914;color:#fff;cursor:pointer}
+.row{display:flex;flex-wrap:wrap;gap:15px}
+.card{width:150px;background:#1f1f1f;border-radius:10px;padding:10px}
+.card img{width:100%;border-radius:8px}
+.card h4{font-size:14px;margin:8px 0}
+.card .comments{margin-top:8px;font-size:12px}
+.card input{width:100%;padding:4px;margin-top:4px;border-radius:4px;border:none}
+a{color:#00d9ff;text-decoration:none;font-size:13px}
+.login{background:#1f1f1f;padding:15px;border-radius:10px;width:250px;margin:15px auto;text-align:center}
+.login input{width:80%;padding:8px;margin:5px 0;border-radius:5px;border:none}
+.login button{padding:8px 15px;border:none;border-radius:5px;background:#e50914;color:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="header">🎬 MovieFlix ULTRA</div>
+
+<!-- SLIDER -->
+<div class="slider">
+<div class="slides">
+<img src="https://via.placeholder.com/1200x250?text=Trending+1">
+<img src="https://via.placeholder.com/1200x250?text=Trending+2">
+<img src="https://via.placeholder.com/1200x250?text=Trending+3">
+</div>
+</div>
+
+<!-- LOGIN -->
+<div class="login">
+<h4>👤 Login</h4>
+<input type="text" id="user" placeholder="Username"><br>
+<input type="password" id="pass" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+</div>
+
+<div class="container">
+<input type="text" class="search" id="searchBox" placeholder="🔎 Search movie..." onkeyup="searchMovies()">
+
+<div class="buttons">
+<button onclick="filterCategory('all')">All</button>
+<button onclick="filterCategory('action')">Action</button>
+<button onclick="filterCategory('drama')">Drama</button>
+<button onclick="filterCategory('history')">History</button>
+</div>
+
+<div class="row" id="movieList"></div>
+</div>
+
+<script>
+// Movie data (can be fetched from Telegram JSON)
+let movies=[
+{title:"Parasakthi (2026)",cat:"history",img:"https://via.placeholder.com/300x450",trailer:"https://youtu.be/dXCliyBQnWU?si=G9ysPh-MaZxRdmlc",comments:[]},
+{title:"Queen of Chess",cat:"drama",img:"https://via.placeholder.com/300x450",trailer:"#",comments:[]},
+{title:"The Wrecking Crew",cat:"action",img:"https://via.placeholder.com/300x450",trailer:"#",comments:[]}
+];
+
+function loadMovies(list){
+let box=document.getElementById("movieList");
+box.innerHTML="";
+list.forEach((m,i)=>{
+box.innerHTML+=`
+<div class="card" data-cat="${m.cat}" id="card${i}">
+<img src="${m.img}">
+<h4>${m.title}</h4>
+<a href="${m.trailer}" target="_blank">🎞 Trailer</a><br>
+<a href="#">📺 Watch Officially</a>
+<div class="comments">
+<input type="text" placeholder="Add comment" id="comment${i}" onkeypress="addComment(event,${i})">
+<ul id="commentList${i}"></ul>
+</div>
+</div>`;
+loadComments(i);
+});
+}
+
+function searchMovies(){
+let val=document.getElementById("searchBox").value.toLowerCase();
+loadMovies(movies.filter(m=>m.title.toLowerCase().includes(val)));
+}
+
+function filterCategory(cat){
+if(cat=="all"){loadMovies(movies);}
+else{loadMovies(movies.filter(m=>m.cat==cat));}
+}
+
+function login(){
+let user=document.getElementById("user").value;
+let pass=document.getElementById("pass").value;
+if(user=="admin" && pass=="1234"){alert("✅ Welcome!");} 
+else{alert("❌ Wrong credentials!");}
+}
+
+// Comments functions
+function addComment(e,index){
+if(e.key==="Enter"){
+let val=document.getElementById(`comment${index}`).value;
+if(val.trim()!=""){
+movies[index].comments.push(val);
+document.getElementById(`comment${index}`).value="";
+loadComments(index);
+}
+}
+}
+
+function loadComments(index){
+let list=document.getElementById(`commentList${index}`);
+list.innerHTML="";
+movies[index].comments.forEach(c=>{
+let li=document.createElement("li");
+li.textContent=c;
+list.appendChild(li);
+});
+}
+
+loadMovies(movies);
+</script>
+
+</body>
+</html>
