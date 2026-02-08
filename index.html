@@ -135,7 +135,7 @@ list.appendChild(li);
 
 // 🔹 Fetch movies from GitHub JSON
 function fetchMovies(){
-fetch("https://raw.githubusercontent.com/username/movieflix-ultra/main/movies.json")
+fetch("https://raw.githubusercontent.com/hectracore/movieflix-ultra/main/movies.json")
 .then(res=>res.json())
 .then(data=>{
 movies=data.map(m=>({...m, comments:[]}));
